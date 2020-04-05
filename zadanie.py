@@ -52,21 +52,20 @@ COLORS = [
 
 def analyze(filename):
     counter = collections.Counter()
-    with open(filename, 'rt') as file:
+    with open(filename, 'rt', encoding='utf-8') as file:
         logging.info('Processing %s', filename)
         contents = file.read().split(u'-----\r\nTa lektura,')[0]
         tokens = TOKENIZE_RE.findall(contents)
-        result = 0
-        for token in range(tokens):
-            tokens[token].lower()
+        result = []
+        for token in tokens:
+            token.lower()
             if token in INTERESTING_TOKEN_LIST:
                 counter[token] += 1
 
         for res in INTERESTING_TOKEN_LIST:
-            result = result + counter[res] / len(tokens)
+            result.append(counter[res] / len(tokens))
         # TU(5): Uzupełnić zgodnie z instrukcją.
     # TU(6): Uzupełnić zgodnie z instrukcją.
-
 
     return result
 
@@ -92,7 +91,7 @@ def plot(filenames, X, title):
         ax.annotate(xy=(x, y), s=book, color=color)
     legend_handles = [
         patches.Circle((0.5, 0.5), color=x) for x in colors.values()]
-    ax.legend(legend_handles, colors.keys(), loc='upper left')
+    ax.legend(legend_handles, colors.keys(), loc='lower left')
     plt.title(title)
     plt.show()
 
@@ -126,7 +125,7 @@ def plot3d(filenames, X, title, gif_name):
         ax.view_init(elev=elev, azim=azimu)
         legend_handles = [
             patches.Circle((0.5, 0.5), color=x) for x in colors.values()]
-        ax.legend(legend_handles, colors.keys(), loc='upper left')
+        ax.legend(legend_handles, colors.keys(), loc='lower left')
         plt.title(title, loc='right')
 
     fig = plt.figure(figsize=(6.4, 4.8))
@@ -150,8 +149,19 @@ def main():
     # TU(9): Narysować analogiczny do powyższego diagram
     # wyników analizy czynnikowej (n_components=2).
 
+
+    plot(
+        filenames,
+        decomposition.FactorAnalysis(n_components=2).fit_transform(X),
+        'Factor Analysis')
+
     # TU(10): Narysować analogiczny do powyższych diagram
     # wyników skalowania wielowymiarowego (n_components=2).
+
+    plot(
+        filenames,
+        manifold.MDS(n_components=2).fit_transform(X),
+        'Multidimensional Scaling')
 
 
 if __name__ == '__main__':
