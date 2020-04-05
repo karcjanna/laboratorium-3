@@ -56,8 +56,18 @@ def analyze(filename):
         logging.info('Processing %s', filename)
         contents = file.read().split(u'-----\r\nTa lektura,')[0]
         tokens = TOKENIZE_RE.findall(contents)
+        result = 0
+        for token in range(tokens):
+            tokens[token].lower()
+            if token in INTERESTING_TOKEN_LIST:
+                counter[token] += 1
+
+        for res in INTERESTING_TOKEN_LIST:
+            result = result + counter[res] / len(tokens)
         # TU(5): Uzupełnić zgodnie z instrukcją.
     # TU(6): Uzupełnić zgodnie z instrukcją.
+
+
     return result
 
 
